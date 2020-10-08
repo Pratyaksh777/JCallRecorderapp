@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JCallRecorder</string>
+    <string name="accessibility_service_label">JCR</string>
 </resources>

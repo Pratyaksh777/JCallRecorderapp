@@ -47,7 +47,7 @@ public class Android10Recorder extends AbstractRecorder {
         if (shouldRecordScreen) {
             setUpRecorderForScreenRecord(recorder);
         }
-        String filePath = new File(outputFile, DateUtils.getFormattedDate()).getAbsolutePath();
+        String filePath = new File(outputFile, DateUtils.getFormattedDate() + ".3gp").getAbsolutePath();
         recorder.setOutputFile(filePath);
         // -----------------------------------------------------
         recorder.prepare();

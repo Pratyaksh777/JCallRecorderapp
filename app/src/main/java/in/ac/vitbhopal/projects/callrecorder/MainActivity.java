@@ -12,12 +12,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-
-import java.util.Arrays;
+import android.provider.Settings;
 
 @RequiresApi(api = Build.VERSION_CODES.P)
 public class MainActivity extends AppCompatActivity {
-    private String[] permissions = {
+    private static final String[] permissions = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -31,16 +30,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        requestPermissions();
     }
 
-    public void requestPerssions() {
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            requestPermissions();
+        }
+    }
+
+
+    public void requestPermissions() {
         if (!hasPermissions(permissions)) {
             ActivityCompat.requestPermissions(
                     this,
                     permissions,
                     RecorderConstants.REQUESTCODE_PERMISSIONS
             );
+        } else {
+            requestAccessibilityService();
+        }
+    }
+
+
+    public void requestAccessibilityService() {
+        if (!isAccessibilityEnabled()) {
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivityForResult(intent, RecorderConstants.REQUESTCODE_ACCESSIBILITY);
+        } else {
+            moveTaskToBack(true);
         }
     }
 
@@ -57,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case RecorderConstants.REQUESTCODE_ACCESSIBILITY:
+                moveTaskToBack(true);
+                break;
         }
     }
 
@@ -65,11 +88,19 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case RecorderConstants.REQUESTCODE_ACCESSIBILITY:
+                // Recursively force user to provide required permissions
                 if (grantResults.length < permissions.length) {
-                    // Recursively force user to provide required permissions
-                    requestPerssions();
+                    requestPermissions();
+                } else {
+                    requestAccessibilityService();
                 }
                 break;
         }
+    }
+
+    private boolean isAccessibilityEnabled() {
+        String prefString = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+        if (prefString == null) return false;
+        return prefString.contains(getApplicationContext().getPackageName()+ "/"+getApplicationContext().getPackageName() +"services.RecorderService");
     }
 }

@@ -2,10 +2,12 @@ package in.ac.vitbhopal.projects.callrecorder.services;
 
 import android.accessibilityservice.AccessibilityService;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.util.Consumer;
 
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.PhoneState;
@@ -56,11 +58,14 @@ public class RecorderService extends AccessibilityService {
     private void initializeStateChangeHandler() {
         phoneStateChangeListener = new PhoneStateObserver(getApplicationContext());
 
-        phoneStateChangeListener.onStateChange((state) -> {
-            if (recorder.isRecording() && state == PhoneState.IDLE) {
-                recorder.stop();
-            } else if (!recorder.isRecording() && (state == PhoneState.CELLULAR_CALL || state == PhoneState.VoIP_CALL)) {
-                recorder.start();
+        phoneStateChangeListener.onStateChange(new Consumer<PhoneState>() {
+            @Override
+            public void accept(PhoneState state) {
+                if (recorder.isRecording() && state == PhoneState.IDLE) {
+                    recorder.stop();
+                } else if (!recorder.isRecording() && (state == PhoneState.CELLULAR_CALL || state == PhoneState.VoIP_CALL)) {
+                    recorder.start();
+                }
             }
         });
     }
