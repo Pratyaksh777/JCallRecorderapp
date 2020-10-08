@@ -4,18 +4,22 @@ import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Build;
 
-import in.ac.vitbhopal.projects.callrecorder.projection.ProjectionHandler;
+import androidx.annotation.RequiresApi;
 
+import in.ac.vitbhopal.projects.callrecorder.projection.ProjectionHandler;
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class VersionedRecorderFactory {
     private VersionedRecorderFactory() { }
 
     public static AbstractRecorder getRecorder(Context ctx) {
         int CURRENT_VERSION = Build.VERSION.SDK_INT;
+        MediaRecorder mediaRecorder = new MediaRecorder();
         if (CURRENT_VERSION >= Build.VERSION_CODES.Q) {
-            MediaRecorder mediaRecorder = new MediaRecorder();
             return new Android10Recorder(ctx, mediaRecorder, new ProjectionHandler(ctx, mediaRecorder));
         } else {
-            throw new IllegalArgumentException("Invalid android version.");
+            // temporary solution since just testing for android 10
+            return new Android10Recorder(ctx, mediaRecorder, new ProjectionHandler(ctx, mediaRecorder));
+            // throw new IllegalArgumentException("Invalid android version.");
         }
     }
 }

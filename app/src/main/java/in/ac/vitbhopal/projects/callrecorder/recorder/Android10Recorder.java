@@ -3,11 +3,13 @@ package in.ac.vitbhopal.projects.callrecorder.recorder;
 import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import java.io.File;
 
+import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.ScreenInfo;
 import in.ac.vitbhopal.projects.callrecorder.projection.ProjectionHandler;
 import in.ac.vitbhopal.projects.callrecorder.utils.DateUtils;
@@ -22,11 +24,14 @@ public class Android10Recorder extends AbstractRecorder {
     }
 
     @Override
-    public void onStart() { }
+    public void onStart() {
+        Log.d(RecorderConstants.DEBUG_TAG, "Started recording!");
+    }
 
     @Override
     public void onStop() {
         getVirtualDisplayHandler().releaseVirtualDisplay();
+        Log.d(RecorderConstants.DEBUG_TAG, "Stopped recording!");
     }
 
     @Override
