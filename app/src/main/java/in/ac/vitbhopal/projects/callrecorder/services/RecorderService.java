@@ -24,6 +24,7 @@ public class RecorderService extends AccessibilityService {
         super.onCreate();
         initializeRecorder();
         initializeStateChangeHandler();
+
     }
 
     @Override

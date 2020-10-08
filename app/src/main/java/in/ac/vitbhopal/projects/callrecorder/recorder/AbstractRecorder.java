@@ -7,7 +7,6 @@ import android.util.Log;
 
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
-import in.ac.vitbhopal.projects.callrecorder.helper.PhoneStateChangeListener;
 import in.ac.vitbhopal.projects.callrecorder.projection.AbstractVirtualDisplayHandler;
 
 public abstract class AbstractRecorder implements Disposable {

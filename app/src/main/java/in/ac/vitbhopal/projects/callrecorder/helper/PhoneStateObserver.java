@@ -17,6 +17,8 @@ public class PhoneStateObserver extends PhoneStateChangeListener {
     private final Object lock = new Object();
     private final Timer scheduler = new Timer();
     private final AudioManager audioManager;
+
+
     public PhoneStateObserver(Context ctx) {
         this.ctx = ctx;
         audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
