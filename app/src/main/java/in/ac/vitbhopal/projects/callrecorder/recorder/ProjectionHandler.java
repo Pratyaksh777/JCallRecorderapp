@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.util.Locale;
 
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
+import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
 import in.ac.vitbhopal.projects.callrecorder.helper.ScreenInfo;
 import in.ac.vitbhopal.projects.callrecorder.utils.ScreenUtils;
 
@@ -74,6 +75,18 @@ public final class ProjectionHandler extends AbstractVirtualDisplayHandler {
         IntentFilter broadcastIntentFilter = new IntentFilter();
         broadcastIntentFilter.addAction(RecorderConstants.ACTION_BR_PROJECTIONDATA);
         getContext().registerReceiver(projectionDataReceiver, broadcastIntentFilter);
+    }
+
+    public void dispose() {
+        if (virtualDisplay != null) {
+            virtualDisplay.release();
+            virtualDisplay = null;
+        }
+        if (projection != null) {
+            projection.stop();
+            projection = null;
+        }
+        getContext().unregisterReceiver(projectionDataReceiver);
     }
 
     private final BroadcastReceiver projectionDataReceiver = new BroadcastReceiver() {

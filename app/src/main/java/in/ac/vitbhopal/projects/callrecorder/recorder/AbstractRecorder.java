@@ -9,8 +9,9 @@ import android.media.projection.MediaProjection;
 import android.util.Log;
 
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
+import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
 
-public abstract class AbstractRecorder {
+public abstract class AbstractRecorder implements Disposable {
     private final MediaRecorder recorder;
     private final Context ctx;
     private final AbstractVirtualDisplayHandler virtualDisplayHandler;
@@ -22,6 +23,13 @@ public abstract class AbstractRecorder {
         this.ctx = ctx;
         this.recorder = recorder;
         this.virtualDisplayHandler = virtualDisplayHandler;
+    }
+
+    /**
+     * @return The application context associated with current recorder
+     */
+    public Context getContext() {
+        return ctx;
     }
 
     /**
@@ -78,6 +86,7 @@ public abstract class AbstractRecorder {
      */
     public final void dispose() {
         stop();
+        virtualDisplayHandler.dispose();
         recorder.release();
     }
 
