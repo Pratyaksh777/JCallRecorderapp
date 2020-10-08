@@ -7,14 +7,17 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.recorder.AbstractRecorder;
 import in.ac.vitbhopal.projects.callrecorder.recorder.Android10Recorder;
 import in.ac.vitbhopal.projects.callrecorder.recorder.ProjectionHandler;
+import in.ac.vitbhopal.projects.callrecorder.recorder.VersionedRecorderFactory;
 
 public class RecorderService extends AccessibilityService {
     private AbstractRecorder recorder;
@@ -25,23 +28,18 @@ public class RecorderService extends AccessibilityService {
         initializeRecorder();
     }
 
-
-    private void initializeRecorder() {
-        int CURRENT_VERSION = Build.VERSION.SDK_INT;
-        if (CURRENT_VERSION >= Build.VERSION_CODES.Q) {
-            MediaRecorder mediaRecorder = new MediaRecorder();
-            recorder = new Android10Recorder(getApplicationContext(), mediaRecorder, new ProjectionHandler(getApplicationContext(), mediaRecorder));
-        } else {
-            throw new IllegalArgumentException("Invalid android version.");
-        }
-    }
-
     @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
-
-    }
+    public void onAccessibilityEvent(AccessibilityEvent event) { }
 
     @Override
     public void onInterrupt() { }
 
+    private void initializeRecorder() {
+        try {
+            recorder = VersionedRecorderFactory.getRecorder(getApplicationContext());
+        } catch (IllegalArgumentException e) {
+            Log.d(RecorderConstants.DEBUG_TAG, "Invalid android version detected! Shutting down...");
+            stopSelf();
+        }
+    }
 }

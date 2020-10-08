@@ -16,10 +16,19 @@ import in.ac.vitbhopal.projects.callrecorder.utils.DateUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class Android10Recorder extends AbstractRecorder {
+
     private final File outputFile;
     public Android10Recorder(Context context, MediaRecorder recorder, ProjectionHandler vDHandler) {
         super(context, recorder, vDHandler);
         outputFile = context.getExternalFilesDir("CallRecorderTest");
+    }
+
+    @Override
+    public void onStart() { }
+
+    @Override
+    public void onStop() {
+        getVirtualDisplayHandler().releaseVirtualDisplay();
     }
 
     @Override
@@ -39,6 +48,8 @@ public class Android10Recorder extends AbstractRecorder {
         recorder.setOutputFile(filePath);
         // -----------------------------------------------------
         recorder.prepare();
+        // -----------------------------------------------------
+        getVirtualDisplayHandler().createVirtualDisplay();
     }
 
     private void setUpRecorderForScreenRecord(MediaRecorder recorder) {

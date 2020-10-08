@@ -34,12 +34,16 @@ public abstract class AbstractRecorder {
             prepare(recorder);
             recorder.start();
             recording = true;
+            onStart();
         } catch (Exception e) {
             Log.d(RecorderConstants.DEBUG_TAG, "Unable to start recorder: " + e.getMessage(), e);
+            recorder.reset();
             return false;
         }
         return true;
     }
+
+    public abstract void onStart();
 
     /**
      *  Safely tries to stop the recorder. Internal MediaRecorder is assured to be reset after the call to this function
@@ -55,9 +59,12 @@ public abstract class AbstractRecorder {
             return false;
         } finally {
             recorder.reset();
+            onStop();
         }
         return true;
     }
+
+    public abstract void onStop();
 
     /**
      * @return Current recording state of recorder

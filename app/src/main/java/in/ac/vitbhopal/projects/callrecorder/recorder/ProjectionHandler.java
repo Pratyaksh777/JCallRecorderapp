@@ -43,12 +43,12 @@ public final class ProjectionHandler extends AbstractVirtualDisplayHandler {
 
     @Override
     public boolean isReady() {
-        return projection != null;
+        return projection != null && virtualDisplay == null;
     }
 
     @Override
     public boolean createVirtualDisplay() {
-        if (!isReady() || virtualDisplay != null) return false;
+        if (!isReady()) return false;
         virtualDisplay = projection.createVirtualDisplay(
                 "RecorderVD",
                 getScreenInfo().getWidth(),
@@ -64,7 +64,7 @@ public final class ProjectionHandler extends AbstractVirtualDisplayHandler {
 
     @Override
     public boolean releaseVirtualDisplay() {
-        if (!isReady() || virtualDisplay == null) return false;
+        if (virtualDisplay == null) return false;
         virtualDisplay.release();
         virtualDisplay = null;
         return true;
