@@ -1,17 +1,15 @@
 package in.ac.vitbhopal.projects.callrecorder.recorder;
 
 import android.content.Context;
-import android.icu.text.SimpleDateFormat;
 import android.media.MediaRecorder;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Locale;
 
 import in.ac.vitbhopal.projects.callrecorder.helper.ScreenInfo;
+import in.ac.vitbhopal.projects.callrecorder.projection.ProjectionHandler;
 import in.ac.vitbhopal.projects.callrecorder.utils.DateUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.N)

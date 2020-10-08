@@ -1,4 +1,4 @@
-package in.ac.vitbhopal.projects.callrecorder.recorder;
+package in.ac.vitbhopal.projects.callrecorder.projection;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
-import android.icu.text.SimpleDateFormat;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
@@ -18,12 +17,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.text.DateFormat;
-import java.util.Locale;
-
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
-import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
-import in.ac.vitbhopal.projects.callrecorder.helper.ScreenInfo;
 import in.ac.vitbhopal.projects.callrecorder.utils.ScreenUtils;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

@@ -4,12 +4,13 @@ import android.accessibilityservice.AccessibilityService;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
+import in.ac.vitbhopal.projects.callrecorder.helper.PhoneStateChangeListener;
 import in.ac.vitbhopal.projects.callrecorder.recorder.AbstractRecorder;
 import in.ac.vitbhopal.projects.callrecorder.recorder.VersionedRecorderFactory;
 
 public class RecorderService extends AccessibilityService {
     private AbstractRecorder recorder;
-
+    private PhoneStateChangeListener phoneStateChangeListener;
     @Override
     public void onCreate() {
         super.onCreate();

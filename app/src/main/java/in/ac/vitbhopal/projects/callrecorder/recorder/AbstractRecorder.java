@@ -1,21 +1,19 @@
 package in.ac.vitbhopal.projects.callrecorder.recorder;
 
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Camera;
-import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
-import android.media.projection.MediaProjection;
 import android.util.Log;
 
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
+import in.ac.vitbhopal.projects.callrecorder.helper.PhoneStateChangeListener;
+import in.ac.vitbhopal.projects.callrecorder.projection.AbstractVirtualDisplayHandler;
 
 public abstract class AbstractRecorder implements Disposable {
     private final MediaRecorder recorder;
     private final Context ctx;
     private final AbstractVirtualDisplayHandler virtualDisplayHandler;
-
     private boolean recording = false;
 
 
