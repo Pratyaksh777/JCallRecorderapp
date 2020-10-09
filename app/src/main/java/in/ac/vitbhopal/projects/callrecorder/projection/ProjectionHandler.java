@@ -88,7 +88,7 @@ public final class ProjectionHandler extends AbstractVirtualDisplayHandler {
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             if (extras == null) return;
-            Object result = intent.getExtras().get("ProjectionResultData");
+            Object result = intent.getExtras().get(RecorderConstants.BR_RESULT_PROJECTIONDATA);
             // Implicit null check included with instanceof check
             if (!(result instanceof Intent)) {
                 Log.d(RecorderConstants.DEBUG_TAG, "Invalid permission data received ");

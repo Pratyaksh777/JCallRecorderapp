@@ -8,14 +8,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 
 @RequiresApi(api = Build.VERSION_CODES.P)
 public class MainActivity extends AppCompatActivity {
+    private static Intent projectionData = null;
     private static final String[] permissions = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA,
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
             startActivityForResult(intent, RecorderConstants.REQUESTCODE_ACCESSIBILITY);
         } else {
-            moveTaskToBack(true);
+            requestBatteryUnoptimized();
         }
     }
 
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RecorderConstants.REQUESTCODE_ACCESSIBILITY:
-                moveTaskToBack(true);
+                requestBatteryUnoptimized();
                 break;
         }
     }
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case RecorderConstants.REQUESTCODE_ACCESSIBILITY:
+            case RecorderConstants.REQUESTCODE_PERMISSIONS:
                 // Recursively force user to provide required permissions
                 if (grantResults.length < permissions.length) {
                     requestPermissions();
@@ -101,6 +106,24 @@ public class MainActivity extends AppCompatActivity {
     private boolean isAccessibilityEnabled() {
         String prefString = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
         if (prefString == null) return false;
-        return prefString.contains(getApplicationContext().getPackageName()+ "/"+getApplicationContext().getPackageName() +"services.RecorderService");
+        return prefString.contains(getApplicationContext().getPackageName()+ "/"+getApplicationContext().getPackageName() +".services.RecorderService");
+    }
+
+    private boolean isIgnoringBatteryOptimizations() {
+        PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(getApplicationContext().POWER_SERVICE);
+        String name = getApplicationContext().getPackageName();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return powerManager.isIgnoringBatteryOptimizations(name);
+        }
+        return true;
+    }
+
+    private void requestBatteryUnoptimized() {
+        if (!isIgnoringBatteryOptimizations() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+            startActivity(intent);
+        } else {
+            moveTaskToBack(true);
+        }
     }
 }

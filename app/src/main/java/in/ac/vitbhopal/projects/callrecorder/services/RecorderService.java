@@ -1,14 +1,13 @@
 package in.ac.vitbhopal.projects.callrecorder.services;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Intent;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
-
 import androidx.annotation.RequiresApi;
 import androidx.core.util.Consumer;
-
+import in.ac.vitbhopal.projects.callrecorder.MainActivity;
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.PhoneState;
 import in.ac.vitbhopal.projects.callrecorder.helper.PhoneStateChangeListener;
@@ -26,7 +25,6 @@ public class RecorderService extends AccessibilityService {
         super.onCreate();
         initializeRecorder();
         initializeStateChangeHandler();
-
     }
 
     @Override
@@ -70,4 +68,12 @@ public class RecorderService extends AccessibilityService {
         });
     }
 
+    @Override
+    protected void onServiceConnected() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        startActivity(intent);
+    }
 }
