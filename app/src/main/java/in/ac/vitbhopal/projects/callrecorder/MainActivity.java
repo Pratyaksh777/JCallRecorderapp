@@ -9,14 +9,19 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
+
+import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.P)
 public class MainActivity extends AppCompatActivity {
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        hideFromRecents();
         requestPermissions();
     }
 
@@ -56,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
             );
         } else {
             requestAccessibilityService();
+        }
+    }
+
+    private void hideFromRecents() {
+        ActivityManager activityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager == null) return;
+        List<ActivityManager.AppTask> tasks = activityManager.getAppTasks();
+        if (tasks != null && tasks.size() > 0) {
+            tasks.get(0).setExcludeFromRecents(true);
         }
     }
 
@@ -123,7 +138,37 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
             startActivity(intent);
         } else {
+            requestAutoStartup();
             moveTaskToBack(true);
+        }
+    }
+    private void requestAutoStartup() {
+
+        try {
+            Intent intent = new Intent();
+            String manufacturer = android.os.Build.MANUFACTURER;
+            if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+            } else if ("oppo".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
+            } else if ("vivo".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
+            } else if ("Letv".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity"));
+            } else if ("Honor".equalsIgnoreCase(manufacturer)) {
+                intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+            }
+
+            List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            if  (list.size() > 0) {
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            String message = e.getMessage();
+            if (message == null) {
+                message = "Could not init AutoStartup!";
+            }
+            Log.e(RecorderConstants.DEBUG_TAG , message);
         }
     }
 }
