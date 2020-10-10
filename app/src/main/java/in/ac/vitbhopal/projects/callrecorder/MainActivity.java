@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             requestAutoStartup();
-            moveTaskToBack(true);
         }
     }
     private void requestAutoStartup() {
@@ -157,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity"));
             } else if ("Honor".equalsIgnoreCase(manufacturer)) {
                 intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+            }else {
+                moveTaskToBack(true);
+                return;
             }
 
             List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
