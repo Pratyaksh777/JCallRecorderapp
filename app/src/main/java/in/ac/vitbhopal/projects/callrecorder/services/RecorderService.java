@@ -1,8 +1,12 @@
 package in.ac.vitbhopal.projects.callrecorder.services;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import androidx.annotation.RequiresApi;
@@ -31,7 +35,22 @@ public class RecorderService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) { }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
     public void onInterrupt() { }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        Intent restartIntent = new Intent(getApplicationContext(), getClass());
+        restartIntent.setPackage(getPackageName());
+        PendingIntent pendingServiceRestartIntent = PendingIntent.getService(getApplicationContext(), 1, restartIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, pendingServiceRestartIntent);
+    }
 
     @Override
     public void onDestroy() {
