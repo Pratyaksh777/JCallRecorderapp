@@ -9,4 +9,5 @@ public class RecorderConstants {
     public static final int REQUESTCODE_ACCESSIBILITY = 50;
     public static final int REQUESTCODE_PERMISSIONS = 51;
     public static final int REQUESTCODE_MEDIAPROJECTION = 52;
+    public static final String NOTIFICATION_CHANNEL_ID = "JCR";
 }

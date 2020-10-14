@@ -5,10 +5,15 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +30,6 @@ import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.P)
 public class MainActivity extends AppCompatActivity {
-    private static Intent projectionData = null;
     private static final String[] permissions = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA,
@@ -173,4 +177,5 @@ public class MainActivity extends AppCompatActivity {
             Log.e(RecorderConstants.DEBUG_TAG , message);
         }
     }
+
 }

