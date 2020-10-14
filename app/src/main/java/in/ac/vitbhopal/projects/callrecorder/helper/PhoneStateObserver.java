@@ -57,15 +57,15 @@ public class PhoneStateObserver extends PhoneStateChangeListener {
                 int mode = audioManager.getMode();
                 PhoneState newState;
                 switch (mode) {
+                    case AudioManager.MODE_RINGTONE:
                     case AudioManager.MODE_IN_CALL:
                         newState = PhoneState.CELLULAR_CALL;
                         break;
+                    case AudioManager.MODE_CALL_SCREENING:
                     case AudioManager.MODE_IN_COMMUNICATION:
                         newState = PhoneState.VoIP_CALL;
                         break;
-                    case AudioManager.MODE_CALL_SCREENING:
                     case AudioManager.MODE_NORMAL:
-                    case AudioManager.MODE_RINGTONE:
                     default:
                         newState = PhoneState.IDLE;
                         break;
