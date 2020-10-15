@@ -94,6 +94,7 @@ public class RecorderService extends AccessibilityService {
     }
 
     private void initializeStateChangeHandler() {
+        // The second argument is the ticking interval between state checks
         phoneStateChangeListener = new PhoneStateObserver(getApplicationContext(), 5000);
 
         phoneStateChangeListener.onObservationTick(new Consumer<PhoneState>() {
