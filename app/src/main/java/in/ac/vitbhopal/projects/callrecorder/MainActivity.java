@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
             startActivity(intent);
         } else {
-            requestAutoStartup();
+            moveTaskToBack(true);
         }
     }
     private void requestAutoStartup() {
