@@ -17,10 +17,10 @@ import in.ac.vitbhopal.projects.callrecorder.utils.DateUtils;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class Android10Recorder extends AbstractRecorder {
 
-    private final File outputFile;
+    private final File outputFolder;
     public Android10Recorder(Context context, MediaRecorder recorder, ProjectionHandler vDHandler) {
         super(context, recorder, vDHandler);
-        outputFile = context.getExternalFilesDir("CallRecorderTest");
+        outputFolder = context.getExternalFilesDir("CallRecorderTest");
     }
 
     @Override
@@ -47,8 +47,10 @@ public class Android10Recorder extends AbstractRecorder {
         if (shouldRecordScreen) {
             setUpRecorderForScreenRecord(recorder);
         }
-        String filePath = new File(outputFile, DateUtils.getFormattedDate() + ".3gp").getAbsolutePath();
+        File out = new File(outputFolder, DateUtils.getFormattedDate() + ".3gp");
+        String filePath = out.getAbsolutePath();
         recorder.setOutputFile(filePath);
+        setCurrentSaveFile(out);
         // -----------------------------------------------------
         recorder.prepare();
         // -----------------------------------------------------

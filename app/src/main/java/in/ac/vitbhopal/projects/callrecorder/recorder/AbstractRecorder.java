@@ -5,6 +5,10 @@ import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import java.io.File;
+
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
 import in.ac.vitbhopal.projects.callrecorder.projection.AbstractVirtualDisplayHandler;
@@ -14,6 +18,7 @@ public abstract class AbstractRecorder implements Disposable {
     private final Context ctx;
     private final AbstractVirtualDisplayHandler virtualDisplayHandler;
     private boolean recording = false;
+    private File currentSaveFile = null;
 
 
     public AbstractRecorder(Context ctx, MediaRecorder recorder, AbstractVirtualDisplayHandler virtualDisplayHandler) {
@@ -65,8 +70,18 @@ public abstract class AbstractRecorder implements Disposable {
         } finally {
             recorder.reset();
             onStop();
+            setCurrentSaveFile(null);
         }
         return true;
+    }
+
+    @Nullable
+    public final File getCurrentSaveFile() {
+        return currentSaveFile;
+    }
+
+    protected final void setCurrentSaveFile(@Nullable File file) {
+        this.currentSaveFile = file;
     }
 
     public abstract void onStop();
