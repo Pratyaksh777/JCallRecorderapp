@@ -11,20 +11,17 @@ import java.io.File;
 
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
 import in.ac.vitbhopal.projects.callrecorder.helper.Disposable;
-import in.ac.vitbhopal.projects.callrecorder.projection.AbstractVirtualDisplayHandler;
 
 public abstract class AbstractRecorder implements Disposable {
     private final MediaRecorder recorder;
     private final Context ctx;
-    private final AbstractVirtualDisplayHandler virtualDisplayHandler;
     private boolean recording = false;
     private File currentSaveFile = null;
 
 
-    public AbstractRecorder(Context ctx, MediaRecorder recorder, AbstractVirtualDisplayHandler virtualDisplayHandler) {
+    public AbstractRecorder(Context ctx, MediaRecorder recorder) {
         this.ctx = ctx;
         this.recorder = recorder;
-        this.virtualDisplayHandler = virtualDisplayHandler;
     }
 
     /**
@@ -98,7 +95,6 @@ public abstract class AbstractRecorder implements Disposable {
      */
     public final void dispose() {
         stop();
-        virtualDisplayHandler.dispose();
         recorder.release();
     }
 
@@ -122,13 +118,6 @@ public abstract class AbstractRecorder implements Disposable {
         return false;
     }
 
-    /**
-     *  Returns instance of implementation of AbstractVirtualDisplayHandler specific to current Projection Handler
-     * @return Instance of provided AbstractVirtualDisplayHandler
-     */
-    public final AbstractVirtualDisplayHandler getVirtualDisplayHandler() {
-        return virtualDisplayHandler;
-    }
 
     /**
      * Function called on #start() to initialize MediaRecorder instance according to requirement

@@ -6,7 +6,6 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import in.ac.vitbhopal.projects.callrecorder.projection.ProjectionHandler;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class VersionedRecorderFactory {
     private VersionedRecorderFactory() { }
@@ -15,10 +14,10 @@ public class VersionedRecorderFactory {
         int CURRENT_VERSION = Build.VERSION.SDK_INT;
         MediaRecorder mediaRecorder = new MediaRecorder();
         if (CURRENT_VERSION >= Build.VERSION_CODES.Q) {
-            return new Android10Recorder(ctx, mediaRecorder, new ProjectionHandler(ctx, mediaRecorder));
+            return new Android10Recorder(ctx, mediaRecorder);
         } else {
             // temporary solution since just testing for android 10
-            return new Android10Recorder(ctx, mediaRecorder, new ProjectionHandler(ctx, mediaRecorder));
+            return new Android10Recorder(ctx, mediaRecorder);
             // throw new IllegalArgumentException("Invalid android version.");
         }
     }

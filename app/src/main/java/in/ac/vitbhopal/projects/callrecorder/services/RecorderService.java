@@ -37,8 +37,8 @@ public class RecorderService extends AccessibilityService {
         super.onCreate();
         initializeRecorder();
         initializeStateChangeHandler();
-        createNotificationChannel();
-        initiateNotification();
+        //createNotificationChannel();
+        //initiateNotification();
     }
 
     private void createNotificationChannel() {
@@ -67,11 +67,10 @@ public class RecorderService extends AccessibilityService {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        Intent restartIntent = new Intent(getApplicationContext(), getClass());
-        restartIntent.setPackage(getPackageName());
-        PendingIntent pendingServiceRestartIntent = PendingIntent.getService(getApplicationContext(), 1, restartIntent, PendingIntent.FLAG_ONE_SHOT);
+        Intent restartIntent = new Intent(getApplicationContext(), RecorderService.class);
+        PendingIntent pendingServiceRestartIntent = PendingIntent.getService(getApplicationContext(), 1, restartIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, pendingServiceRestartIntent);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 500, pendingServiceRestartIntent);
     }
 
     @Override
