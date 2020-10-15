@@ -50,6 +50,7 @@ public class Android10Recorder extends AbstractRecorder {
         File out = new File(outputFolder, DateUtils.getFormattedDate() + ".3gp");
         String filePath = out.getAbsolutePath();
         recorder.setOutputFile(filePath);
+
         setCurrentSaveFile(out);
         // -----------------------------------------------------
         recorder.prepare();

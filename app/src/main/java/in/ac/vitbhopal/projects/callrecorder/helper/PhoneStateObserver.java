@@ -25,6 +25,13 @@ public class PhoneStateObserver extends PhoneStateChangeListener {
         startStateObservation();
     }
 
+    public PhoneStateObserver(Context ctx, int tickInterval) {
+        this.ctx = ctx;
+        audioManager = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        setTickingInterval(tickInterval);
+        startStateObservation();
+    }
+
     public PhoneState getCurState() {
         synchronized (lock) {
             return curState;
@@ -40,7 +47,7 @@ public class PhoneStateObserver extends PhoneStateChangeListener {
     }
 
     private void startStateObservation() {
-        scheduler.scheduleAtFixedRate(new ObservationTask(),1000,1000);
+        scheduler.scheduleAtFixedRate(new ObservationTask(),getTickingInterval(),getTickingInterval());
     }
 
     @Override
@@ -70,6 +77,7 @@ public class PhoneStateObserver extends PhoneStateChangeListener {
                         newState = PhoneState.IDLE;
                         break;
                 }
+                notifyTick(newState);
                 if (newState == getCurState()) return null;
                 setCurState(newState);
                 return null;

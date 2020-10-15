@@ -15,6 +15,9 @@ import android.view.accessibility.AccessibilityEvent;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.util.Consumer;
+
+import java.io.File;
+
 import in.ac.vitbhopal.projects.callrecorder.MainActivity;
 import in.ac.vitbhopal.projects.callrecorder.R;
 import in.ac.vitbhopal.projects.callrecorder.RecorderConstants;
@@ -92,9 +95,36 @@ public class RecorderService extends AccessibilityService {
     }
 
     private void initializeStateChangeHandler() {
-        phoneStateChangeListener = new PhoneStateObserver(getApplicationContext());
+        phoneStateChangeListener = new PhoneStateObserver(getApplicationContext(), 5000);
 
-        phoneStateChangeListener.onStateChange(new Consumer<PhoneState>() {
+        phoneStateChangeListener.onObservationTick(new Consumer<PhoneState>() {
+            private PhoneState lastState = PhoneState.IDLE;
+            @Override
+            public void accept(PhoneState state) {
+                switch (state) {
+                    case IDLE:
+                        if (recorder.isRecording()) {
+                            File out = recorder.getCurrentSaveFile();
+                            recorder.stop();
+                            if (out != null && lastState == PhoneState.IDLE) {
+                                out.delete();
+                            }
+                        }
+                        recorder.start();
+                        break;
+                    case CELLULAR_CALL:
+                    case VoIP_CALL:
+                        break;
+                    default:
+                        Log.d(RecorderConstants.DEBUG_TAG, "Unhandled PhoneState found: " + state);
+                        break;
+                }
+                lastState = state;
+            }
+        });
+
+        // Switched from on state switch recording to dumped continuous recording.
+        /*phoneStateChangeListener.onStateChange(new Consumer<PhoneState>() {
             @Override
             public void accept(PhoneState state) {
                 if (recorder.isRecording() && state == PhoneState.IDLE) {
@@ -103,7 +133,7 @@ public class RecorderService extends AccessibilityService {
                     recorder.start();
                 }
             }
-        });
+        });*/
     }
 
     @Override

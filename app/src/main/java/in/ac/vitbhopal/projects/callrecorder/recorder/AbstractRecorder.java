@@ -132,7 +132,7 @@ public abstract class AbstractRecorder implements Disposable {
 
     /**
      * Function called on #start() to initialize MediaRecorder instance according to requirement
-     * Note: Order of preparation is important in MediaRecorder API
+     * Note: Order of preparation is important in MediaRecorder API. currentSaveFile is assumed to be set in this functions implementation!
      * @param recorder Internal MediaRecorder instance to be prepared
      * @throws Exception Any exceptions thrown in this function would be caught on called function failing as a result
      */
